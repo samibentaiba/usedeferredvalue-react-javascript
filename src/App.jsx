@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+import React, { useState, useDeferredValue } from 'react';
+
+const bigList = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
+
+function List({ input }) {
+  const filtered = bigList.filter((item) =>
+    item.toLowerCase().includes(input.toLowerCase())
+  );
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ul>
+      {filtered.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
 }
 
-export default App
+export default function App() {
+  const [input, setInput] = useState('');
+  const deferredInput = useDeferredValue(input);
+
+  return (
+    <div style={{ padding: 20, fontFamily: 'Arial, sans-serif' }}>
+      <h1>useDeferredValue Example (JS)</h1>
+      <input
+        type="text"
+        placeholder="Type to filter a big list..."
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        style={{
+          padding: '10px',
+          width: '100%',
+          marginBottom: '1rem',
+          fontSize: '1rem',
+        }}
+      />
+      <List input={deferredInput} />
+    </div>
+  );
+}
+
